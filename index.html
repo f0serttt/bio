@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fosert's biography</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #101010;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .profile-card {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .avatar {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 15px;
+            border: 2px solid #ff4747;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .bio {
+            margin: 15px 0;
+            font-size: 16px;
+            color: #ccc;
+        }
+
+        .links {
+            margin: 20px 0;
+        }
+
+        .links a {
+            display: block;
+            margin: 5px 0;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .links a.telegram {
+            color: #0088cc; /* Цвет ссылки Telegram */
+        }
+
+        .white {
+            color: #fff !important;
+            transition: color 0.4s ease; /* Плавный переход */
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        /* Стиль для всплывающего окна */
+        .popup {
+            position: fixed;
+            left: 50%;
+            bottom: 10px; /* Фиксируем внизу экрана */
+            transform: translateX(-50%);
+            background-color: rgba(0, 255, 0, 0.5);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 10px;
+            z-index: 1000;
+            width: auto;
+            max-width: 200px;
+            min-width: 200px;
+            height: 45px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            word-wrap: break-word;
+            overflow: hidden;
+            flex-direction: column; /* Размещение текста и прогресс-бара по вертикали */
+            animation: popupAnimation 1s ease-out forwards;
+        }
+
+        /* Анимация для появления (снизу вверх) */
+        @keyframes popupAnimation {
+            0% {
+                transform: translateX(-50%) translateY(50%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Анимация для скрытия (снизу вверх) */
+        @keyframes popupHide {
+            0% {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-50%) translateY(50%);
+                opacity: 0;
+            }
+        }
+
+        /* Полоса прогресса */
+        .progress-bar {
+            width: 100%;
+            background-color: #444; /* Темный фон прогресс-бара */
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: #fff; /* Белая заливка прогресс-бара */
+            position: absolute;
+            transition: width 1.6s linear;
+        }
+    </style>
+</head> 
+<body>
+    <div class="container">
+        <div class="profile-card">
+            <img src="photo.jpg" alt="Avatar" class="avatar">
+            <h1>fosert bio</h1>
+            <p class="bio">Это простая страница биографии 😁<br>Просто нажми на интересующую ссылку</p>
+            <div class="links">
+                <a href="#" class="telegram" onclick="showPopup(event, 'Пересылаю...', 'https://t.me/fosertbiography');">Telegram</a>
+            </div>
+        </div>
+        <footer>
+            <p>© 2024 fosert. Все права защищены.</p>
+        </footer>
+    </div>
+
+    <!-- Всплывающее окно -->
+    <div id="popup" class="popup">
+        <p id="popup-text"></p>
+        <div class="progress-bar">
+            <div id="progress" class="progress"></div>
+        </div>
+    </div>
+
+    <script>
+        var isPopupVisible = false; // Флаг для отслеживания видимости окна
+
+        // Функция для отображения всплывающего окна и прогресс-бара
+        function showPopup(event, message, link) {
+            // Отменяем стандартное поведение ссылки (переход)
+            event.preventDefault();
+
+            // Получаем элемент ссылки
+            var linkElement = event.target;
+
+            // Меняем цвет ссылки на белый
+            linkElement.classList.add('white');
+
+            // Через 0.2 секунды возвращаем исходный цвет ссылки плавно
+            setTimeout(function() {
+                linkElement.classList.remove('white');
+            }, 400); // 200 миллисекунд
+
+            // Получаем элемент всплывающего окна
+            var popup = document.getElementById("popup");
+
+            // Если окно уже отображается, запускаем анимацию скрытия
+            if (isPopupVisible) {
+                // Анимация скрытия
+                popup.style.animation = "popupHide 1s ease-out forwards";
+                setTimeout(function() {
+                    popup.style.display = "none"; // Скрываем окно после анимации
+                    isPopupVisible = false; // Обновляем флаг
+                    // После скрытия, показываем окно снова
+                    setTimeout(function() {
+                        showPopup(event, message, link);
+                    }, 1000); // Даем время анимации на скрытие
+                }, 1000); // Дожидаемся окончания анимации скрытия
+            } else {
+                // Отображаем всплывающее окно с сообщением
+                document.getElementById("popup-text").textContent = message;
+                popup.style.display = "flex";
+                popup.style.animation = "popupAnimation 1s ease-out forwards";
+
+                // Запускаем таймер
+                let progress = document.getElementById("progress");
+                progress.style.width = "0%"; // Начальный прогресс
+
+                // Полоса прогресса
+                setTimeout(function() {
+                    progress.style.width = "90%"; // Прогресс до конца
+                }, 100);
+
+                // Через 1.6 секунды скрываем окно и переходим по ссылке
+                setTimeout(function() {
+                    var popup = document.getElementById("popup");
+
+                    // Добавляем класс для анимации скрытия
+                    popup.style.animation = "popupHide 1s ease-out forwards";
+
+                    // После завершения анимации скрываем окно и переходим по ссылке
+                    setTimeout(function() {
+                        popup.style.display = "none"; // Скрываем окно
+                        isPopupVisible = false; // Обновляем флаг
+                        window.open(link, "_blank");  // Переход по ссылке
+                    }, 1000); // Дожидаемся окончания анимации скрытия
+                }, 1600); // 1600 миллисекунд = 1.6 секунды
+
+                // Устанавливаем флаг, что окно отображается
+                isPopupVisible = true;
+            }
+        }
+    </script>
+</body>
+</html>
