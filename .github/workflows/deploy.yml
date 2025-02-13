@@ -3,11 +3,11 @@ name: Run Telegram Bot
 on:
   push:
     branches:
-      - main  # Запускать при пуше в ветку main
-  workflow_dispatch:  # Ручной запуск
+      - main  # Запускать только при пуше в ветку main
 
 jobs:
   run-bot:
+    if: contains(github.event.head_commit.message, 'startbot')  # Запускать только при коммите с сообщением "startbot"
     runs-on: ubuntu-latest
 
     steps:
